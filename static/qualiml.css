@@ -1,0 +1,245 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;400;500&display=swap');
+
+html,
+body {
+  /* margin: 0;
+    padding: 0; */
+  background-color: #f5f5f5;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -.2px;
+  /* padding-top: 40px; */
+  line-height: 1.2;
+}
+form {
+  line-height: 1.5;
+}
+
+img {
+  /* width: 50%; */
+  /* object-fit:scale-down; */
+  height: auto;
+  /* transition: .5s; */
+  /* width:300px; 
+    height:200px */
+  max-width: 700px;
+}
+
+.custom-switch-always-on>.custom-control-label::before {
+  color: #fff;
+  border-color: #007bff;
+  background-color: #007bff;
+}
+
+.custom-switch-always-on>.custom-control-label::after {
+  background-color: #fff;
+}
+
+
+#pills-tab {
+  gap: .5rem;
+}
+
+.tab-content {
+  margin-top: 60px;
+}
+
+.tab-content {
+  margin-top: 60px;
+}
+
+@media only screen and (max-width: 575px) {
+  .tab-content {
+    margin-top: 100px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .tab-content {
+    margin-top: 120px;
+  }
+}
+
+#pills-tab .nav-item {
+  position: relative;
+}
+
+#pills-tab.tainted .nav-link {
+  transition: none;
+}
+
+#pills-tab .tab-trigger {
+  border: 2px solid transparent;
+  background: #ffffff;
+  border-color: #28a8bc;
+
+}
+
+#pills-tab.tainted .tab-trigger {
+  border-color: transparent;
+  opacity: 0.5
+}
+
+#pills-tab.tainted .tab-trigger.active {
+  opacity: 1
+}
+
+#pills-tab .tab-trigger:hover {
+  border-color: #1888bc;
+
+}
+
+
+background: #fefefe;
+
+#pills-tab.tainted .tab-trigger {
+  background: #ffffff;
+  border-color: transparent;
+
+}
+
+
+#pills-tab .tab-trigger {
+  height: 100%;
+  padding: 25px;
+  color: #000;
+
+}
+
+#pills-tab .tab-trigger p,
+#pills-tab .tab-trigger h4,
+#pills-tab .tab-trigger img,
+#pills-tab .tab-trigger .btn {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#pills-tab .tab-trigger p,
+#pills-tab .tab-trigger h4 {
+  width: 420px;
+  transition: all 200ms;
+}
+
+#pills-tab .tab-trigger .btn {
+  color: #fff;
+  transition: none;
+
+}
+
+#pills-tab .tab-trigger img {
+  width: 350px;
+  height: auto;
+  max-width: 100%;
+}
+
+#pills-tab.tainted .tab-trigger:not(:hover) h4,
+#pills-tab.tainted .tab-trigger:not(:hover) p,
+#pills-tab.tainted .tab-trigger:not(:hover) img {}
+
+#pills-tab.tainted .tab-trigger.active {
+  opacity: 0.50;
+}
+
+#pills-tab.tainted .tab-trigger:hover,
+#pills-tab.tainted .tab-trigger.active {
+  opacity: 1;
+}
+
+#zoom-img:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  padding-top: 100px;
+  /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.9);
+  /* Black w/ opacity */
+}
+
+.modal-content {
+  height: auto;
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: white;
+  padding: 20px 0;
+  height: 150px;
+}
+
+.modal-content,
+#caption {
+  -webkit-animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
+  animation-name: zoom;
+  animation-duration: 0.6;
+}
+
+@-webkit-keyframes zoom {
+  from {
+    -webkit-transform: scale(0);
+  }
+
+  to {
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes zoom {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+#myModal .close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px) {
+  .modal-content {
+    width: 100%;
+  }
+}

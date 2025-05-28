@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap CSS -->
+        {% include 'head.html' %}
+        <link rel="stylesheet" href="../static/qualiml.css">
+        <title>Home | {{ constants.sitetitle }}</title>
+        <meta name="google-site-verification"
+              content="g8U-UktB1WiIS4HLtzCpQrHMnqOTRZFQ3G3HWnBWRj8" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="row fixed-top align-items-center">
+                <div class="col">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, msg in messages %}
+                                <div class="alert alert-{{ category }} text-center">
+                                    <button type="button"
+                                            class="m1-2 mb-1 close"
+                                            data-dismiss="alert"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ msg }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            <!-- <div class="row align-items-center justify-content-center align-items-center">
+                <div class="col text-center">
+                    <h1 class="">Meta-validation plots for external validation of ML models</h1>
+                    <p class="description text-muted mb-5" id="scope">Online tool to generate the Potential Robustness Diagram (PRD) and the External Performance Diagram (EPD)</p>
+
+
+                    <p class="text-right font-italic">Files marked with * are mandatory.</p>
+                    <p class="text-right font-italic">Files must contain no missing values.</p>
+                </div>
+            </div> -->
+            
+            <div class="row text-center">
+                <div class="col">
+                <img src="../static/icons/modelRobustness.png" alt="modelRobustness" style="width: 200px;">
+                <h1>Model Robustness</h1>
+                <p class="text-muted" style="margin-top: 5rem; margin-bottom: 5rem;">
+                    This online tool evaluates whether your <strong>Decision Support System (DSS)</strong> maintains <strong>adequate performance when deployed in practical contexts</strong> beyond its development environment. By comparing model behavior across training and external validation datasets, it generates <strong>Potential Robustness Diagrams (PRD)</strong>
+                    <sup><button class="btn btn-link p-0 border-0" style="line-height: 0.8; vertical-align: top;" data-toggle="tooltip" title="relates a set of similarities with the corresponding accuracy score."> <i class="fas fa-info-circle text-muted" style="font-size: 0.7em;"></i> </button> </sup>
+                    and <strong>External Performance Diagrams (EPD)</strong>
+                    <sup><button class="btn btn-link p-0 border-0" style="line-height: 0.8; vertical-align: top;" data-toggle="tooltip" title="Benchmarking actual performance against design specifications."> <i class="fas fa-info-circle text-muted" style="font-size: 0.7em;"></i> </button> </sup>
+                    to quantify and visualize generalization capabilities.
+                </p>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-lg-12">
+                    <div class="d-flex justify-content-center align-items-center min-vh-50">
+                        <button 
+                        type="button" 
+                        id="uploadBtn"
+                        class="btn btn-lg btn-primary px-4 mb-5">
+                            ENTER
+                        </button>
+                    </div>
+                </div>
+            </div>
+              
+
+            {% include 'footer.html' %}
+    </div>
+    <script>
+        $('.form-upload').submit(function () {
+            $(':button[type=submit]').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...').addClass('disabled');
+        });
+    </script>
+    <script>
+        // $(document).ready(function() {
+            $('.loading-href').click(function() {
+            // $(this).prop("disabled", true);
+            $('.loading-href').html(
+                `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`
+            );
+            });
+        // });
+    </script>
+    <script>
+         $(".custom-file-input").change(function(event){
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+
+        $('#testplt2btn').click(function () {
+            $('#testplt2btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Calculating test results...').addClass('disabled');
+            eci_calibration = $("#eci_calibration").is(':checked') ? 'on' : 'off';
+            balanced_accuracy = $("#balanced_accuracy").is(':checked') ? 'on' : 'off';
+            net_benefit = $("#net_benefit").is(':checked') ? 'on' : 'off';
+            window.location.href = `{{ url_for("testplt2") }}?balanced_accuracy=${balanced_accuracy}&net_benefit=${net_benefit}&eci_calibration=${eci_calibration}`
+        });
+    </script>
+    <script>
+        // Wait for the DOM to be fully loaded
+        $(document).ready(function() {
+          // Add a class on the first click event
+          $('#pills-tab').one('click', 'a.nav-link', function() {
+            $('#pills-tab').addClass('tainted');
+            });
+
+            $('#pills-tab').on('click', 'a.tab-trigger', function(event) {
+
+                const element = $('#pills-tab')[0];
+
+                element.scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+                const selected = $(event.target).closest('a.tab-trigger')[0].href.slice(-10);
+
+                var currentURL = window.location.href;
+                var urlObject = new URL(currentURL);
+                urlObject.searchParams.set("tool", selected);
+
+                var newURL = urlObject.href;
+                window.history.replaceState({ path: newURL }, "", newURL);
+
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function() {
+          var tool = "{{ g.tool }}"
+
+          // Set the corresponding pill tab as active
+          $(".nav-pills").find(".nav-link[href='#" + tool + "']").click();
+        //   $(".tab-content").find(".tab-pane[id='" + tool + "']").addClass("show active");
+        });
+
+    </script>
+    <script>
+    
+      $('#uploadBtn').click(function () {
+        $('#uploadBtn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Entering...').addClass('disabled');
+        
+        window.location.href = '{{ url_for("upload") }}'
+      });
+    </script>
+    {% include 'metatool.html' %}
+</body>
+</html>
+<!-- f1c840d -->

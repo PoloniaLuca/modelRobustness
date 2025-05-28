@@ -1,0 +1,37 @@
+<script>
+
+  window.addEventListener('load', function() {
+    document.documentElement.style.overscrollBehavior = 'none';
+  });
+  
+  var scrollMessage = '';
+  
+  window.addEventListener('scroll', function () {
+    const scrollTop = window.pageYOffset;
+    var div = document.documentElement;
+    var hasVerticalScroll = div.scrollHeight > div.clientHeight;
+  
+    // newScrollMessage = (scrollTop <= 0) ? 'scrolledTop' : 'scrolled';
+
+    newScrollMessage = (scrollTop <= 0 && hasVerticalScroll) ? 'scrolledTop' : 'scrolled';
+  
+    if (newScrollMessage != scrollMessage) {
+      scrollMessage = newScrollMessage;
+      window.parent.postMessage({
+        type: scrollMessage,
+      }, '*');
+  
+    }
+  },
+    {
+      capture: true,
+      passive: true
+    }
+  );
+  
+  window.addEventListener('message', function (event) {
+    if (event.source === parent && event.data.type === 'scrollToTop') {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+  });
+</script>

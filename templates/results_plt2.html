@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% include 'head.html' %}
+        <link rel="stylesheet" href="../static/qualiml.css">
+
+        <title>External Performance Diagram | {{ constants.sitetitle }}</title>
+    </head>
+    <body>
+        <div class="container">
+            {% include 'header.html' %}
+            <div class="row fixed-top align-items-center">
+                <div class="col">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, msg in messages %}
+                                <div class="alert alert-{{ category }} text-center">
+                                    <button type="button"
+                                            class="m1-2 mb-1 close"
+                                            data-dismiss="alert"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ msg }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="row mb-5 justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <div class="card p-5">
+                        <h1 class="mb-3 text-center">External Performance Diagram</h1>
+                        <img id="zoom-img"
+                             src="data:image/png;base64, {{ img_url }}"
+                             class="card-img-top  bg-white rounded "
+                             alt="External Performance Diagram">
+                        <div class="card-body">
+                            <p class="card-text mb-5">
+                                <small>
+                                    This diagram displays the results from the external validation study. Information about the Minimum Sample Size is rendered in terms of hue brightness. The width of the ellipses is equal to the width of the 95% confidence interval w.r.t. the given performance metrics.
+                                </small>
+                            </p>
+                            <div class="float-right">
+                                <!-- <button onclick="history.back()" class="btn btn-info ">Back</button> -->
+                                <a href="data:image/png;base64, {{ img_url }}"
+                                   download="External Performance Diagram"
+                                   class="btn btn-primary"><i class="fa fa-download"></i>Download the Visualization</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div id="myModal" class="modal">
+                    <span class="close">&times;</span>
+                    <img class="modal-content" id="img01">
+                    <div id='caption'></div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="mb-5 text-muted col-lg-12 ">
+                    <small>
+                        For more details on this diagram please refer to:
+                        Cabitza, F., Campagner, A., Soares, F., de Guardiana Romualdo, L. G., Challa, F., Sulejmani, A.,
+                        Seghezzi, M., Carobene, A. (2021). The importance of being external. methodological insights for the external
+                        validation of machine learning models in medicine. Computer Methods and Programs in Biomedicine. Volume 208, September 2021, 106288 <a href="https://doi.org/10.1016/j.cmpb.2021.106288">https://doi.org/10.1016/j.cmpb.2021.106288</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <script>
+        var modal = document.getElementById("myModal");
+        var img = document.getElementById("zoom-img");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        img.onclick = function () {
+            modal.style.display = "block";
+            modalImg.src = this.src;
+            captionText.innerHTML = this.alt;
+        }
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+        </script>
+        {% include 'metatool.html' %}
+    </body>
+</html>

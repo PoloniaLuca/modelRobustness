@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap CSS -->
+        {% include 'head.html' %}
+        <divnk rel="stylesheet" href="../static/qualiml.css">
+        <title>Home | {{ constants.sitetitle }}</title>
+        <meta name="google-site-verification"
+              content="g8U-UktB1WiIS4HLtzCpQrHMnqOTRZFQ3G3HWnBWRj8" />
+    </head>
+  <style>
+    #robustnessBtn {
+      transition: all 0.3s ease;
+      --progress-width: 0%;
+      background-image: linear-gradient(
+        to right,
+        rgba(255,255,255,0.3) var(--progress-width),
+        transparent var(--progress-width)
+      );
+    }
+    #progressBar {
+      transition: width 0.3s linear;
+    }
+    .z-index-2 {
+      z-index: 2;
+    }
+  </style>
+    <body>
+        <div class="container">
+            <div class="row fixed-top align-items-center">
+                <div class="col">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, msg in messages %}
+                                <div class="alert alert-{{ category }} text-center">
+                                    <button type="button"
+                                            class="m1-2 mb-1 close"
+                                            data-dismiss="alert"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ msg }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            
+            
+            {% include 'header.html' %}
+              
+            <div class="row align-items-center mt-5 mb-5">
+                <div class="col justify-content-center ">
+                    <div class="text-left mb-2">
+                        <h3 class="">Input Data: <strong>External Validation/Test Set</strong></h3>
+                        <h5>Already have your files ready? 
+                            <button class="btn btn-link p-0 border-0" onclick="document.getElementById('uploadEpd').scrollIntoView({behavior: 'smooth'});">Jump to upload &darr;</button>
+                        </h5>
+                        <h6 class="my-4">The External Performance Diagram (EPD) displays the results of three performance analyses (discriminative, utility, calibration) as a function of the similarity between training/validation and external validation/test sets.</h6>
+                    </div>
+                    <div class="text-center">
+                        <img src="{{ url_for('static', filename='epd.png') }}" />
+                    </div>
+                    <div class="text-left">
+                        <p>
+                            To generate the diagram, the tool requires: <br><br>
+                        </p>
+                        <h4><strong>Mandatory Input Files</strong></h4>
+                        <ol>
+                            
+                            <h5><li>Datasets: one or more <code>.csv</code> files with:</li></h5>
+                            <ul>
+                                <li><strong>Format:</strong> <code>.csv</code> with headers</li>
+                                <li>
+                                    <strong>Mandatory Columns:</strong> 
+                                    <ul>
+                                        <li><b>y_true</b>: the ground truth for each case, encoded as 1 to indicate the positive class (or 0 for the negative class)</li>
+                                        <li><b>y_proba</b>: the probability assigned by the model to the positive class</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Optional Columns:</strong> 
+                                    <ul>
+                                        <li><b>threshold</b>: the decisional thresholds (between 0 and 1) applied to the probabilities to obtain the predictions</li>
+                                        <li><b>relevance</b>: the weights assigned to each of the cases (between 0 and 1)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Example Pack:</strong> <a href="{{ url_for('static', filename='testfiles/plt2/datasets.zip') }}"
+        target="_blank">ExampleDatasets</a> </li>
+                            </ul>
+                            <h5><li>Similarities:</li></h5>
+                            <ul>
+                                <li><strong>Format:</strong> <code>.csv</code></li>
+                                <li>
+                                    <strong>Mandatory Column:</strong> 
+                                    <ul>
+                                        <li><b>similarity values:</b> Precomputed similarity values (range: [0,1]) relative to the training set.</li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Notes:</strong> 
+                                    <ul>
+                                        <li>One value per dataset provided in the previous field (positionally matched to uploaded dataset files)</li>
+                                        <li>Similarity can be computed in terms of <a href="https://psicorrespondence.pythonanywhere.com/" target="_blank">Degree of Correspondence.</a></li>
+                                    </ul>
+                                </li>
+                                <li><strong>Example file:</strong> <a href="{{ url_for('static', filename='testfiles/plt2/sims.csv') }}"
+        target="_blank">Example</a> </li>
+                            </ul>
+                        </ol>
+                        <h4><strong>Optional Input Files</strong></h4>
+                        <ol start="3">
+                            <h5><li>Axis Offsets</li></h5>
+                            <ul>
+                                <!-- <li><strong>File:</strong> y_pred_array.txt</li> -->
+                                <li><strong>Format:</strong> <code>.csv</code></li>
+                                <li><strong>Offset Files:</strong>
+                                    <ul>
+                                        <li><b>Discriminative Offsets</b></li>
+                                        <li><b>Utility Offsets</b></li>
+                                        <li><b>Calibration Offsets</b></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <strong>Mandatory Columns (per file):</strong> 
+                                    <ul>
+                                        <li><b>offset_x:</b> Horizontal adjustment for values.</li>
+                                        <li><b>offset_y:</b> Vertical adjustment for values.</li>
+                                    </ul>
+                                    (Each file must explicitly have offset_x and offset_y as columns name)
+                                </li>
+                                <li><strong><i>Default:</i></strong> if omitted, labels use (0.01, 0.01) offsets.</li> 
+                            </ul>
+                        </ol>  
+                        
+                        <p>To generate a proper CSV file from an existing MS Excel file, try this tool: <a href="https://www.entechne.com/metimeter/convertitoreXLSX.html">XLSX-CSV converter</a>.</p>
+                    </div>
+                    <div class="">
+                        <div class="">
+                            <form class="form-upload"
+                                  method="POST"
+                                  enctype="multipart/form-data"
+                                  action="/plt2">
+                                <dl>
+                                    <p class="text-right font-italic mt-5" id="uploadEpd">Fields marked with * are mandatory.</p>
+                                    <p class="text-right font-italic">Files must not contain missing values.</p>
+                                    <dt>Datasets *</dt>
+                                    <div class="custom-file mb-5">
+                                        <input type="file"
+                                               class="custom-file-input"
+                                               id="multiple-input"
+                                               name="datasets[]"
+                                               multiple="true"
+                                               accept=".csv"
+                                               onchange="updateFileName(this, 'multiple-output')"
+                                               required>
+                                        <label class="custom-file-label" id="multiple-output" for="customFile" data-default-text="Select one or more .csv dataset files *">Select one or more .csv dataset files *</label>
+                                    </div>
+                                    
+                                    <dt>Similarities *</dt> 
+                                    <div class="custom-file mb-5">
+                                        <input type="file" class="custom-file-input" name="sims"  required
+                                               onchange="updateFileName(this, 'simLabel')"
+                                            accept=".csv">
+                                        <label class="custom-file-label" id="simLabel" for="customFile" data-default-text="Select or drop here the .csv similarities file *">Select or drop here the .csv similarities file *</label>
+                                    </div>
+
+                                    <dt>Offsets</dt>
+                                    <div class="custom-file mb-2">
+                                        <input type="file" class="custom-file-input" name="offsets_auc" accept=".csv"
+                                               onchange="updateFileName(this, 'offsetAucLabel')">
+                                        <label class="custom-file-label" id="offsetAucLabel" for="offsets_auc" data-default-text="Select or drop here the .csv offset file for the discriminative power metric">Select or drop here the .csv offset file for the discriminative power metric</label>
+                                    </div>
+                                    <div class="custom-file mb-2">
+                                        <input type="file" class="custom-file-input" name="offsets_nb" accept=".csv"
+                                               onchange="updateFileName(this, 'offsetNbLabel')">
+                                        <label class="custom-file-label" id="offsetNbLabel" for="offsets_nb" data-default-text="Select or drop here the .csv offset file for the utility metric">
+                                            Select or drop here the .csv offset file for the utility metric
+                                        </label>
+                                    </div>
+                                    <div class="custom-file mb-5">
+                                        <input type="file" class="custom-file-input" name="offsets_brier" accept=".csv"
+                                               onchange="updateFileName(this, 'offsetBrierLabel')">
+                                        <label class="custom-file-label" id="offsetBrierLabel" for="offsets_brier" data-default-text="Select or drop here the .csv offset file for the calibration metric">
+                                            Select or drop here the .csv offset file for the calibration metric
+                                        </label>
+                                    </div>
+                                    <dt>Discriminative power metric</dt>
+                                    <div class="mb-3">
+                                        AUC &nbsp;
+                                        <div class="custom-control custom-switch custom-switch-always-on d-inline">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   name="balanced_accuracy"
+                                                   id="balanced_accuracy">
+                                            <label class="custom-control-label" for="balanced_accuracy">Balanced Accuracy</label>
+                                        </div>
+                                    </div>
+                                    <dt>Utility metric</dt>
+                                    <div class="mb-3">
+                                        Weighted Utility &nbsp;
+                                        <div class="custom-control custom-switch custom-switch-always-on d-inline">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   name="net_benefit"
+                                                   id="net_benefit">
+                                            <label class="custom-control-label" for="net_benefit">Standard Net Benefit</label>
+                                        </div>
+                                    </div>
+                                    <dt>Calibration metric</dt>
+                                    <div class="mb-3">
+                                        ECI &nbsp;
+                                        <div class="custom-control custom-switch custom-switch-always-on d-inline">
+                                            <input type="checkbox"
+                                                   class="custom-control-input"
+                                                   name="eci_calibration"
+                                                   id="eci_calibration">
+                                            <label class="custom-control-label" for="eci_calibration">Brier Loss</label>
+                                        </div>
+                                    </div>
+                                </dl>
+                                <!-- <button type="submit"
+                                        name="submit"
+                                        class="btn btn-block btn-primary"
+                                        value="submit_plt2">Generate results</button> -->
+                                <button id="robustnessBtn" class="btn btn-lg btn-primary btn-block mt-5" type="submit" name="submit"
+                                        value="submit_plt2">
+                                    <span id="btnText">Generate results</span>
+                                    <div id="progressBar" class="progress mt-2" style="display: none; height: 5px;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                                    </div>
+                                </button>
+                                <input type="hidden" name="tool" value="pills-plt2" />
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'footer.html' %}
+        </div>
+    </div>
+    <script>
+        // $('.form-upload').submit(function () {
+        //     $(':button[type=submit]').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...').addClass('disabled');
+        // });
+    </script>
+    <script>
+        $(document).ready(function() {
+        $('.form-upload').submit(function(e) {
+        //   e.preventDefault();
+          const form = this;
+          const btn = $('#robustnessBtn');
+          const btnText = $('#btnText');
+          const progressBar = $('#progressBar');
+          
+          // 1. Validazione form
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return false;
+          }
+          
+          // 2. Prepara UI
+        //   btn.prop('disabled', true)
+        //     .css('--progress-width', '0%');
+          btnText.html('<span class="spinner-border spinner-border-sm mr-2"></span> Processing');
+          
+          // 3. Animazione progresso
+          let progress = 0;
+          const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress >= 100) {
+              progress = 100;
+              clearInterval(interval);
+              
+              // 4. Completamento
+              setTimeout(() => {
+                btnText.text('Calculation Complete!');
+                
+                // 5. Reset dopo 2 secondi o submit
+                setTimeout(() => {
+                  form.submit(); // Sostituisci con AJAX se necessario
+                }, 2000);
+              }, 300);
+            }
+            
+            // Aggiorna progresso
+            progressBar.css('width', `${progress}%`);
+            btn.css('--progress-width', `${progress}%`);
+            
+          }, 200);
+        });
+      });
+
+    </script>
+    <script>
+        // $(document).ready(function() {
+            $('.loading-href').click(function() {
+            // $(this).prop("disabled", true);
+            $('.loading-href').html(
+                `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`
+            );
+            });
+        // });
+    </script>
+    <script>
+        $(".custom-file-input").change(function(event){
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+
+            // Funzione per aggiornare i label
+            function updateFileName(input, labelId) {
+                if (labelId === "multiple-output") {
+                    javascript:updateList()
+                }
+                const labelElement = document.getElementById(labelId);
+                
+                if (input.files && input.files.length > 0) {
+                    // File was selected - show filename
+                    labelElement.textContent = input.files[0].name;
+                } else {
+                    // No file selected - reset to default text
+                    labelElement.textContent = labelElement.getAttribute('data-default-text') || 
+                                            'Select or drop here a .csv file *';
+                }
+            }
+
+        $('#testplt2btn').click(function () {
+            $('#testplt2btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Calculating test results...').addClass('disabled');
+            eci_calibration = $("#eci_calibration").is(':checked') ? 'on' : 'off';
+            balanced_accuracy = $("#balanced_accuracy").is(':checked') ? 'on' : 'off';
+            net_benefit = $("#net_benefit").is(':checked') ? 'on' : 'off';
+            window.location.href = `{{ url_for("testplt2") }}?balanced_accuracy=${balanced_accuracy}&net_benefit=${net_benefit}&eci_calibration=${eci_calibration}`
+        });
+    </script>
+    <!-- <script>
+        // Wait for the DOM to be fully loaded
+        $(document).ready(function() {
+          // Add a class on the first click event
+          $('#pills-tab').one('click', 'a.nav-link', function() {
+            $('#pills-tab').addClass('tainted');
+            });
+
+            $('#pills-tab').on('click', 'a.tab-trigger', function(event) {
+
+                const element = $('#pills-tab')[0];
+
+                element.scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+                const selected = $(event.target).closest('a.tab-trigger')[0].href.slice(-10);
+
+                var currentURL = window.location.href;
+                var urlObject = new URL(currentURL);
+                urlObject.searchParams.set("tool", selected);
+
+                var newURL = urlObject.href;
+                window.history.replaceState({ path: newURL }, "", newURL);
+
+            });
+        });
+
+    </script> -->
+    <script>
+        $(document).ready(function() {
+          var tool = "{{ g.tool }}"
+
+          // Set the corresponding pill tab as active
+          $(".nav-pills").find(".nav-link[href='#" + tool + "']").click();
+        //   $(".tab-content").find(".tab-pane[id='" + tool + "']").addClass("show active");
+        });
+
+    </script>
+    {% include 'metatool.html' %}
+</body>
+</html>
+<!-- f1c840d -->

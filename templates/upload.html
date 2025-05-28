@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Bootstrap CSS -->
+        {% include 'head.html' %}
+        <divnk rel="stylesheet" href="../static/qualiml.css">
+        <title>Home | {{ constants.sitetitle }}</title>
+        <meta name="google-site-verification"
+              content="g8U-UktB1WiIS4HLtzCpQrHMnqOTRZFQ3G3HWnBWRj8" />
+        <style>
+            .border-2 { border-width: 2px !important; }
+            .border-bottom-2 { border-bottom-width: 2px !important; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row fixed-top align-items-center">
+                <div class="col">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, msg in messages %}
+                                <div class="alert alert-{{ category }} text-center">
+                                    <button type="button"
+                                            class="m1-2 mb-1 close"
+                                            data-dismiss="alert"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ msg }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            <!-- <div class="row align-items-center justify-content-center align-items-center">
+                <div class="col text-center">
+                    <h1 class="">Meta-validation plots for external validation of ML models</h1>
+                    <p class="description text-muted mb-5" id="scope">Online tool to generate the Potential Robustness Diagram (PRD) and the External Performance Diagram (EPD)</p>
+
+
+                    <p class="text-right font-italic">Files marked with * are mandatory.</p>
+                    <p class="text-right font-italic">Files must contain no missing values.</p>
+                </div>
+            </div> -->
+            
+            
+            {% include 'header.html' %}
+              
+            <div class="row align-items-center mt-5 mb-5">
+                <div class="col justify-content-center ">
+                    <div class="text-center mb-2">
+                        <h4 class="mb-4">This platform offers two specialized evaluations of model robustness, each requiring <strong>different inputs</strong> and providing unique insights:</h4>
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-center my-5">
+                        <div class="border border-dark border-5 rounded text-left d-flex flex-column justify-content-between p-4 mb-4 mx-4"  style="min-width: 300px; max-width: 500px; width: 100%;">
+                            <h4 class="">Same dataset as the training set</h4>
+                            <div class="mx-2">
+                                <p>
+                                    <strong>Input:</strong> Your training set (or development data)
+                                </p>
+                                <p>
+                                    <strong>Output:</strong> The Potential Robustness Diagram (PRD): relates a set of similarities with the corresponding accuracy score (intended use to visualize internal validation scores).
+                                </p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <form class="form-upload" action="#" method="POST" enctype="multipart/form-data">
+                                    <button type="button" 
+                                            id="testplt1btn" 
+                                            class="btn btn-link p-0 border-0" 
+                                            style="text-decoration: underline !important; --bs-underline-opacity: 0.7;">
+                                        Try it (with predefined data)
+                                    </button>
+                                </form>
+                                <div class="nav-link btn btn-primary" id="PRD">SELECT</div>
+                            </div>
+                        </div>
+                        <div class="border border-dark border-5 rounded text-left d-flex flex-column justify-content-between p-4 mb-4 mx-4"  style="min-width: 300px; max-width: 500px; width: 100%;">
+                            <h4>External validation dataset</h4>
+                            <div class="mx-2 my-2">
+                                <p>
+                                    <strong>Input:</strong> An external validation/test set
+                                </p>
+                                <p>
+                                    <strong>Output:</strong> The External Performance Diagram (EPD): displays the results of three performance analyses (discriminative, utility, calibration) as a function of the similarity between training/validation and external validation/test sets.
+                                </p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <form class="form-upload" action="#" method="POST" enctype="multipart/form-data">
+                                    <button type="button" 
+                                            id="testplt2btn" 
+                                            class="btn btn-link p-0 border-0" 
+                                            style="text-decoration: underline !important; --bs-underline-opacity: 0.7;">
+                                        Try it (with predefined data)
+                                    </button>
+                                </form>
+                                <div class="nav-link btn btn-primary ml-5" id="EPD">SELECT</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center my-5">
+                        <div class="text-center mb-5 pt-4">
+                            <h3 class="h2 mb-4 font-weight-normal text-dark" style="letter-spacing: 0.3px;">
+                                Key Characteristics Comparison
+                            </h3>
+                        </div>
+                        <div class="container px-0">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover shadow-sm">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th scope="col" style="width: 25%;" class="border-0"></th>
+                                            <th scope="col" style="width: 35%;" class="text-center border-0 py-3">
+                                                <span class="h5 font-weight-bold text-dark">Potential Robustness Diagram <span class="text-muted">(PRD)</span></span>
+                                            </th>
+                                            <th scope="col" style="width: 35%;" class="text-center border-0 py-3">
+                                                <span class="h5 font-weight-bold text-dark">External Performance Diagram <span class="text-muted">(EPD)</span></span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row" class="text-center align-middle bg-light">
+                                                <strong>Data Used</strong>
+                                            </th>
+                                            <td class="py-3">
+                                                <i class="fas fa-database text-muted mr-2"></i>
+                                                Original training/development data
+                                            </td>
+                                            <td class="py-3">
+                                                <i class="fas fa-external-link-alt text-muted mr-2"></i>
+                                                New external validation data
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="text-center align-middle bg-light">
+                                                <strong>Focus</strong>
+                                            </th>
+                                            <td class="py-3">
+                                                <i class="fas fa-search text-muted mr-2"></i>
+                                                Internal model robustness
+                                            </td>
+                                            <td class="py-3">
+                                                <i class="fas fa-rocket text-muted mr-2"></i>
+                                                Deployment readiness
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="text-center align-middle bg-light">
+                                                <strong>Best For</strong>
+                                            </th>
+                                            <td class="py-3">
+                                                <i class="fas fa-flask text-muted mr-2"></i>
+                                                Early development checks
+                                            </td>
+                                            <td class="py-3">
+                                                <i class="fas fa-clipboard-check text-muted mr-2"></i>
+                                                Pre-launch audits
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="text-center align-middle bg-light">
+                                                <strong>Output</strong>
+                                            </th>
+                                            <td class="py-3">
+                                                <i class="fas fa-chart-line text-muted mr-2"></i>
+                                                Accuracy vs. similarity visualization
+                                            </td>
+                                            <td class="py-3">
+                                                <i class="fas fa-chart-bar text-muted mr-2"></i>
+                                                Triple performance analysis
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% include 'footer.html' %}
+        </div>
+    </div>
+    <script>
+        $('.form-upload').submit(function () {
+            $(':button[type=submit]').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Submitting...').addClass('disabled');
+        });
+        
+        $('#PRD').click(function () {
+            $('#PRD').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>').addClass('disabled');
+            window.location.href = '{{ url_for("prd") }}'
+        });
+        
+        $('#EPD').click(function () {
+            $('#EPD').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>').addClass('disabled');
+            window.location.href = '{{ url_for("epd") }}'
+        });
+    </script>
+    <script>
+        // $(document).ready(function() {
+            $('.loading-href').click(function() {
+            // $(this).prop("disabled", true);
+            $('.loading-href').html(
+                `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`
+            );
+            });
+        // });
+    </script>
+    <script>
+         $(".custom-file-input").change(function(event){
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+
+        $('#testplt2btn').click(function () {
+            $('#testplt2btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Calculating test results...').addClass('disabled');
+            eci_calibration = $("#eci_calibration").is(':checked') ? 'on' : 'off';
+            balanced_accuracy = $("#balanced_accuracy").is(':checked') ? 'on' : 'off';
+            net_benefit = $("#net_benefit").is(':checked') ? 'on' : 'off';
+            window.location.href = `{{ url_for("testplt2") }}?balanced_accuracy=${balanced_accuracy}&net_benefit=${net_benefit}&eci_calibration=${eci_calibration}`
+        });
+
+        $('#testplt1btn').click(function () {
+            $('#testplt1btn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Calculating test results...').addClass('disabled');
+            window.location.href = '{{ url_for("testplt1") }}'
+        });
+    </script>
+    <script>
+        // Wait for the DOM to be fully loaded
+        $(document).ready(function() {
+          // Add a class on the first click event
+          $('#pills-tab').one('click', 'a.nav-link', function() {
+            $('#pills-tab').addClass('tainted');
+            });
+
+            $('#pills-tab').on('click', 'a.tab-trigger', function(event) {
+
+                const element = $('#pills-tab')[0];
+
+                element.scrollIntoView({ block: 'start', behavior: 'smooth' });
+
+                const selected = $(event.target).closest('a.tab-trigger')[0].href.slice(-10);
+
+                var currentURL = window.location.href;
+                var urlObject = new URL(currentURL);
+                urlObject.searchParams.set("tool", selected);
+
+                var newURL = urlObject.href;
+                window.history.replaceState({ path: newURL }, "", newURL);
+
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function() {
+          var tool = "{{ g.tool }}"
+
+          // Set the corresponding pill tab as active
+          $(".nav-pills").find(".nav-link[href='#" + tool + "']").click();
+        //   $(".tab-content").find(".tab-pane[id='" + tool + "']").addClass("show active");
+        });
+
+    </script>
+    <script>
+    
+      $('#uploadBtn').click(function () {
+        $('#uploadBtn').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Entering...').addClass('disabled');
+        
+        window.location.href = '{{ url_for("upload") }}'
+      });
+    </script>
+    {% include 'metatool.html' %}
+</body>
+</html>
+<!-- f1c840d -->
