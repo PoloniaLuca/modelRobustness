@@ -25,8 +25,50 @@ $(document).ready(function(){
 });
 </script>
 <style>
+        
+        /* Override Bootstrap 4 primary button colors */
+        .btn-primary {
+        background-color: #1d1b20 !important;
+        border-color: #1d1b20 !important;
+        }
+        .btn-primary:hover,
+        .btn-primary:focus {
+        background-color: #2a282d !important;
+        border-color: #2a282d !important;
+        }
+        .btn-primary:active,
+        .btn-primary.active {
+        background-color: #1a181d !important;
+        border-color: #1a181d !important;
+        }
+
+        /* Link-style button (your second button) */
+        .btn-link {
+        color: #1d1b20 !important;
+        text-decoration: underline !important;
+        }
+        .btn-link:hover {
+        color: #2a282d !important;
+        }/* Font family for all text (override Bootstrap) */
+
+        
+        body {
+        font-family: ui-sans-serif, system-ui, sans-serif, "Segoe UI", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+        }
+        h1 {
+                font-weight: 800;
+        }
+        h3 {
+                font-weight: 635;
+        }
+        h4 {
+                font-weight: 700;
+        }
         b, th {
                 font-weight: 500;
+        }
+        .landing {
+                width: 225px;
         }
         .tooltip-inner {
                 max-width: 400px;  /* Wider tooltip */
